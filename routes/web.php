@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
+
+use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Authentication;
 use App\Http\Controllers\BlogController;
-use App\Http\Controllers\CourseController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,12 +25,20 @@ Route::get('/', function () {
 Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('cursos', [CourseController::class, 'index'])->name('courses.index');
-Route::get('cursos/{slug}', [CourseController::class, 'show'])->name('courses.show');
+Route::get('cursos', [CourseController::class, 'list'])->name('courses.list');
+Route::get('cursos/{slug}', [CourseController::class, 'detail'])->name('courses.detail');
 
 Route::get("blogs", [BlogController::class, 'index'])->name('blog.index');
 
-//Auth::routes();
+Route::prefix('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+
+    Route::prefix('cursos')->group(function () {
+        Route::get('/', [CourseController::class, 'index'])->name('courses.index');
+    });
+});
+
+Auth::routes();
 
 Route::redirect("/home", "/");
 

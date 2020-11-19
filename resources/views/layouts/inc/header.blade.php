@@ -17,7 +17,7 @@
                 <a href="/#contact" class="menu-btn">Contacto</a>
             </li>
             <li>
-            <li class="menu-btn"><a href="{{ route('courses.index') }}">Cursos</a></li>
+            <li class="menu-btn"><a href="{{ route('courses.list') }}">Cursos</a></li>
             </li>
             @auth
                 <li class="dropdown-container">
