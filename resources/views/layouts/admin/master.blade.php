@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('css/adminlte.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.css') }}">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <!-- Styles -->
@@ -171,7 +172,7 @@
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
                     <li class="nav-header">Modulos</li>
                     <li class="nav-item">
-                        <a href="" class="nav-link">
+                        <a href="{{ route('courses.index') }}" class="nav-link">
                             <i class="nav-icon fas fa-calendar-alt"></i>
                             <p>Cursos</p>
                         </a>
@@ -257,6 +258,7 @@
         </div>
     </footer>
 </div>
+@yield('modals')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 <script src="{{ asset('css/bootstrap.bundle.min.js') }}"></script>
@@ -281,13 +283,11 @@
 <script src="{{ asset('plugins/jquery-mapael/maps/usa_states.min.js') }}"></script>
 <!-- ChartJS -->
 <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
-
+<script src="{{ asset('plugins/summernote/summernote-bs4.min.js') }}"></script>
+ @yield('scripts')
 <script>
+    const token = $('meta[name="csrf-token"]').attr('content');
     $(function () {
-        $("#example1").DataTable({
-            "responsive": true,
-            "autoWidth": false,
-        });
         $('#example2').DataTable({
             "paging": true,
             "lengthChange": false,

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BlogController;
 use Illuminate\Support\Facades\Route;
@@ -35,7 +36,17 @@ Route::prefix('admin')->group(function () {
 
     Route::prefix('cursos')->group(function () {
         Route::get('/', [CourseController::class, 'index'])->name('courses.index');
+        Route::get('{course:slug}/editar', [CourseController::class, 'edit'])->name('courses.edit');
+        Route::put('{course:slug}/editar', [CourseController::class, 'update'])->name('courses.update');
+        Route::get('registrar', [CourseController::class, 'create'])->name('courses.create');
+        Route::post('registrar', [CourseController::class, 'store'])->name('courses.store');
+        Route::get('{course:slug}/clases', [CourseController::class, 'createClass'])->name('courses.createClass');
+        Route::post('{course:slug}/clases', [CourseController::class, 'storeClass'])->name('courses.storeClass');
+        Route::get('{course:slug}/clases/secciones', [SectionController::class, 'index'])->name('section.index');
+        Route::post('{course:slug}/clases/secciones', [SectionController::class, 'store'])->name('section.store');
+        Route::put('{course:slug}/actualizar-condicion', [CourseController::class, 'updateCondition'])->name('courses.updateCondition');
     });
+
 });
 
 Auth::routes();
