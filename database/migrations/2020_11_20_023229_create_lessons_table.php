@@ -20,9 +20,12 @@ class CreateLessonsTable extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->string('subtitle')->nullable();
-            $table->double('duration', 18, 2)->default(0.0);
+            $table->time('duration');
             $table->string('url', 225);
             $table->text('description')->nullable();
+            $table->enum('condition', \App\Models\Course::STATUS);
+            $table->boolean('completed')->default(false);
+            $table->integer('order')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

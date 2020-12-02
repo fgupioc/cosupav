@@ -37,7 +37,7 @@
                     <div class=" col-12 col-md-2">
                         <div class="form-group">
                             <label class="col-form-label" for="duration">Duración</label>
-                            <input type="text" class="form-control" name="duration" id="duration" placeholder="00:00" value="{{ old('duration') }}">
+                            <input type="time" step="1" class="form-control" name="duration" id="duration" placeholder="00:00:00" value="{{ old('duration') }}" >
                         </div>
                     </div>
                     <div class="col-12 col-md-10">
@@ -67,17 +67,33 @@
                     <th style="display: none"></th>
                     <th>Sección</th>
                     <th>Clase</th>
+                    <th>Orden</th>
                     <th>Dureciòn</th>
+                    <th>Estado</th>
                     <th>Opciòn</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($lessons as $lesson)
-                    <tr class="text-center">
+                    <tr class="text-center item" data-slug="{{ $lesson->slug }}" data-condition="{{ $lesson->condition }}">
                         <td style="display:none;">{{ $lesson->id }}</td>
                         <td>{{ $lesson->section->title }}</td>
                         <td>{{ $lesson->title }}</td>
+                        <td>
+                            <select class="form-control" name="order" data-lesson="{{ $lesson->id }}">
+                                @for($i = 1; $i <= $orders[$lesson->section_id]; $i++)
+                                <option value="{{$i}}" @if($i == $lesson->order) selected @endif>{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </td>
                         <td>{{ $lesson->duration }}</td>
+                        <td>
+                            <select class="form-control" name="condition">
+                                @foreach(\App\Models\Course::STATUS as $item)
+                                    <option value="{{ $item }}" {{ $item == $lesson->condition ? 'selected' : '' }}>{{ $item }}</option>
+                                @endforeach
+                            </select>
+                        </td>
                         <td>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool">
@@ -186,8 +202,79 @@
                 });
             });
 
+            $('select[name="order"]').change(function (){
+                const $this = $(this);
+                const url = "{{ route('courses.changeOrderLesson') }}";
+                const method = "PUT";
+                $.ajax({
+                    headers: {'X-CSRF-TOKEN': token},
+                    url: url,
+                    type: method,
+                    data: {lesson: $this.data('lesson'), order: $this.val()},
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                    },
+                    success: function (res) {
+                        if(res.status) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Se actualizo el orden',
+                                showConfirmButton: false
+                            })
+                        }
+                    },
+                    error: function (err) {
 
+                    }
+                });
+            });
 
+            $('select[name="condition"]').change(function () {
+                const $this = $(this);
+                const slug = $this.closest('.item').data('slug');
+                const value = $this.val();
+                const old = $this.closest('.item').data('condition');
+                Swal.fire({
+                    title: 'Estas segura?',
+                    text: "Se cambiarà el estado del curso",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, Cambiar!',
+                    cancelButtonText: 'Cancelar!',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            headers: {'X-CSRF-TOKEN': token},
+                            url: `/admin/cursos/${slug}/leccion-actualizar-condicion`,
+                            type: 'PUT',
+                            data: {condition: value},
+                            dataType: 'JSON',
+                            beforeSend: function () {
+                                //$this.find("button").prop("disabled", true);
+                                //$this.find("button").html('<i class="fa fa-spinner fa-pulse"></i> enviando...');
+                            },
+                            success: function (res) {
+                                if (res.status) {
+                                    Swal.fire(
+                                        'Actualozado!',
+                                        'Se actualizo la condiciòn',
+                                        'success'
+                                    )
+                                } else {
+                                    $this.val(old)
+                                }
+                            },
+                            error: function (err) {
+                                $this.val(old)
+                            }
+                        });
+                    } else {
+                        $this.val(old)
+                    }
+                })
+            });
         });
     </script>
 @endsection

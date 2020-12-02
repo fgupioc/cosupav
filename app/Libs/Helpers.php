@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * @param $path
@@ -18,4 +19,8 @@ function storageDeleteFile($path) {
     if (Storage::disk('logos')->exists($path)) {
         Storage::disk('logos')->delete($path);
     }
+}
+
+function title($title){
+    return Str::title($title);
 }

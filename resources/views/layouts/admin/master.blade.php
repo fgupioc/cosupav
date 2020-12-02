@@ -284,6 +284,7 @@
 <!-- ChartJS -->
 <script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
 <script src="{{ asset('plugins/summernote/summernote-bs4.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
  @yield('scripts')
 <script>
     const token = $('meta[name="csrf-token"]').attr('content');

@@ -27,7 +27,7 @@ Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('cursos', [CourseController::class, 'list'])->name('courses.list');
-Route::get('cursos/{slug}', [CourseController::class, 'detail'])->name('courses.detail');
+Route::get('cursos/{course:slug}', [CourseController::class, 'detail'])->name('courses.detail');
 
 Route::get("blogs", [BlogController::class, 'index'])->name('blog.index');
 
@@ -45,6 +45,8 @@ Route::prefix('admin')->group(function () {
         Route::get('{course:slug}/clases/secciones', [SectionController::class, 'index'])->name('section.index');
         Route::post('{course:slug}/clases/secciones', [SectionController::class, 'store'])->name('section.store');
         Route::put('{course:slug}/actualizar-condicion', [CourseController::class, 'updateCondition'])->name('courses.updateCondition');
+        Route::put('{lesson:slug}/leccion-actualizar-condicion', [CourseController::class, 'lessonUpdateCondition'])->name('courses.lessonUpdateCondition');
+        Route::put('changeOrderLesson', [CourseController::class, 'changeOrderLesson'])->name('courses.changeOrderLesson');
     });
 
 });

@@ -11,9 +11,14 @@ class Lesson extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['section_id', 'title', 'slug', 'subtitle', 'duration', 'url', 'description'];
+    protected $fillable = ['section_id', 'title', 'slug', 'subtitle', 'duration', 'url', 'description', 'condition', 'completed', 'order'];
+
+    protected $casts = [
+        'completed' => 'boolean',
+    ];
 
     public function section() {
         return $this->belongsTo(Section::class);
     }
+
 }

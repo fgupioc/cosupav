@@ -586,6 +586,23 @@ footer span a:hover {
     }
 }
 
+.banner{
+    padding: 2em;
+    color: #f9f9f9;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 20px;
+    background-color: #343a40;
+    background: -webkit-gradient(linear,left top,left bottom,from(#343a40),to(#2B0725));
+    background: linear-gradient(to bottom,#343a40 0%,#2B0725 100%);
+    h1 {
+        font-family: compassebold, impact, sans-serif;
+        line-height: 1.25;
+        font-weight: bold;
+    }
+}
+
+/********************************************************/
 @media (max-width: 1300px) {
     .home .max-width {
         margin-left: 0;

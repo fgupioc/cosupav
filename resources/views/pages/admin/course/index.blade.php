@@ -24,7 +24,7 @@
                 </thead>
                 <tbody>
                 @foreach($courses as $course)
-                    <tr class="text-center item" data-slug="{{ $course->slug }}">
+                    <tr class="text-center item" data-slug="{{ $course->slug }}" data-condition="{{ $course->condition }}">
                         <td style="display: none">{{ $course->id }}</td>
                         <td style="text-align: left">{{ $course->title }}</td>
                         <td>
@@ -34,7 +34,7 @@
                         <td>
                             <select class="form-control" name="condition">
                                 @foreach(\App\Models\Course::STATUS as $item)
-                                <option value="{{ $item }}" {{ $item == $course->condition ? 'selected' : '' }}>{{ $item }}</option>
+                                    <option value="{{ $item }}" {{ $item == $course->condition ? 'selected' : '' }}>{{ $item }}</option>
                                 @endforeach
                             </select>
                         </td>
@@ -64,31 +64,54 @@
             $("#example1").DataTable({
                 "responsive": true,
                 "autoWidth": false,
-                "order": [[ 0, "desc" ]]
+                "order": [[0, "desc"]]
             });
 
-            $('select[name="condition"]').change(function (){
+            $('select[name="condition"]').change(function () {
                 const $this = $(this);
                 const slug = $this.closest('.item').data('slug');
                 const value = $this.val();
-                $.ajax({
-                    headers: {'X-CSRF-TOKEN': token},
-                    url: `/admin/cursos/${slug}/actualizar-condicion`,
-                    type: 'PUT',
-                    data: {condition: value},
-                    dataType: 'JSON',
-                    beforeSend: function () {
-                        //$this.find("button").prop("disabled", true);
-                        //$this.find("button").html('<i class="fa fa-spinner fa-pulse"></i> enviando...');
-                    },
-                    success: function (res) {
-                        console.log(res);
-                    },
-                    error: function (err) {
-
-
+                const old = $this.closest('.item').data('condition');
+                Swal.fire({
+                    title: 'Estas segura?',
+                    text: "Se cambiarà el estado del curso",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, Cambiar!',
+                    cancelButtonText: 'Cancelar!',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            headers: {'X-CSRF-TOKEN': token},
+                            url: `/admin/cursos/${slug}/actualizar-condicion`,
+                            type: 'PUT',
+                            data: {condition: value},
+                            dataType: 'JSON',
+                            beforeSend: function () {
+                                //$this.find("button").prop("disabled", true);
+                                //$this.find("button").html('<i class="fa fa-spinner fa-pulse"></i> enviando...');
+                            },
+                            success: function (res) {
+                                if (res.status) {
+                                    Swal.fire(
+                                        'Actualozado!',
+                                        'Se actualizo la condiciòn',
+                                        'success'
+                                    )
+                                } else {
+                                    $this.val(old)
+                                }
+                            },
+                            error: function (err) {
+                                $this.val(old)
+                            }
+                        });
+                    } else {
+                        $this.val(old)
                     }
-                });
+                })
             });
         });
     </script>
