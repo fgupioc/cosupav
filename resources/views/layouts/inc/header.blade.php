@@ -1,7 +1,8 @@
 <nav class="navbar">
     <div class="max-width">
         <div class="logo">
-            <a href="/">cosupav<span>coaching.</span></a>
+            <!-- <a href="/">cosupav<span>coaching.</span></a> -->
+            <img src="{{ asset('/img/svg/logo.svg') }}">
         </div>
         <ul class="menu">
             <li>
